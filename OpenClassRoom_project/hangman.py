@@ -24,17 +24,17 @@ curDir = os.getcwd()
 dictScore = dict()
 
 #try:
-#    with open(data.file_score + '.txt', "r+") as fileScore:
+#    with open(file_score + '.txt', "r+") as fileScore:
 #        dataScore = fileScore.read()
 #except Exception as mssg:
 #    print('Error message : ' + mssg)
 #    print('creating the file ...')
-#    with open(data.file_score + '.txt', "w+") as fileScore:
+#    with open(file_score + '.txt', "w+") as fileScore:
 #        dataScore = fileScore.read()
 
 # Get the scores, if non existing, create the file
 #try:
-#    with open(data.file_score + '.txt') as fileScore:
+#    with open(file_score + '.txt') as fileScore:
 #         spamreader = csv.reader(fileScore, delimiter=' ')
 #         for row in spamreader:
 #             a = ':'.join(row)
@@ -44,18 +44,18 @@ dictScore = dict()
 #except FileNotFoundError as mssgError:
 #    print(str(mssgError))
 #    print('creating the file ...')
-#    with open(data.file_score + '.txt', "w+") as fileScore:
+#    with open(file_score + '.txt', "w+") as fileScore:
 #        dictScore = dict() 
         
 
 try:
-    with open(data.file_score,'rb') as fileScore:
+    with open(file_score,'rb') as fileScore:
          my_depickler = pickle.Unpickler(fileScore)
          dictScore = my_depickler.load()
 except FileNotFoundError as mssgError:
     print(str(mssgError))
     print('creating the file ...')
-    with open(data.file_score, "w+") as fileScore:
+    with open(file_score, "w+") as fileScore:
         dictScore = dict() 
 
 
@@ -69,15 +69,15 @@ try:
         raise EOFError
 except EOFError:
     try:
-        quit_script.attemptToQuit()
+        attemptToQuit()
     except SystemExit:
         playTheHangman = False
 
 # Get the score list into a dictionary
-#sep = functions.ColumnSeperated(dataScore,'\n')
+#sep = ColumnSeperated(dataScore,'\n')
 #dictName = dict()
 #for iSep in range(len(sep)):
-#    strTodict = functions.ColumnSeperated(sep[iSep],' : ')
+#    strTodict = ColumnSeperated(sep[iSep],' : ')
 #    print(strTodict)
 #    dictName[strTodict[0]] = strTodict[1]
 
@@ -87,7 +87,7 @@ if namePlayer != 'quit':
     except:
         print('You have not been recorded before, your score is now set to 0')
         dictScore[namePlayer] = '0'
-        with open(data.file_score, "wb") as fileScore:
+        with open(file_score, "wb") as fileScore:
             for iElement in dictScore:
                 dataToSave = pickle.Pickler(fileScore)
                 dataToSave.dump(dictScore)
@@ -95,7 +95,7 @@ if namePlayer != 'quit':
 # Game start
 while playTheHangman:
     
-    motCache = functions.random_word(data.mots)
+    motCache = random_word(mots)
     
     hiddenWord = '';
     for star in motCache:
@@ -103,7 +103,7 @@ while playTheHangman:
     
     print('\nWord is :  ', hiddenWord, ' [', len(motCache),' letters long]')
     
-    chance = data.chance
+    chance = chance
     print('you have ', chance,' chances to save Billy')
     listOfLetterUsed = ''
     wordIsDiscovered = False
@@ -135,7 +135,7 @@ while playTheHangman:
                     break
             except EOFError:
                 try:
-                    quit_script.attemptToQuit()
+                    attemptToQuit()
                 except SystemExit:
                     toQuit = True
                     goOnAsking = not toQuit
@@ -143,21 +143,21 @@ while playTheHangman:
                     break
             
         if not toQuit:
-            ispartOfStr, placeOfLetter = functions.isInList(motCache,chosenLetter)
+            ispartOfStr, placeOfLetter = isInList(motCache,chosenLetter)
             
             if ispartOfStr is False:
                 print(chosenLetter, ' is not in the word you need to discover')
             else:
                 for placeNbr in placeOfLetter:
-                    hiddenWord = functions.replaceStar(hiddenWord,chosenLetter,placeNbr)
+                    hiddenWord = replaceStar(hiddenWord,chosenLetter,placeNbr)
             
             if not '*' in hiddenWord:
                 wordIsDiscovered = True
             else:
                 print('How much you know of the word so far : ', hiddenWord)
-                listOfLetterUsed = functions.lettersUsed(listOfLetterUsed,chosenLetter)
+                listOfLetterUsed = lettersUsed(listOfLetterUsed,chosenLetter)
                 print('list of letters you tried : ', listOfLetterUsed)
-                chance = functions.chanceRemaining(chance,ispartOfStr)
+                chance = chanceRemaining(chance,ispartOfStr)
                 print('you have ', chance,' remaining chance')
     else:
         if wordIsDiscovered:
@@ -186,10 +186,10 @@ while playTheHangman:
             print("Do you want to try again (We'll find another Billy for you) ?")
         
     try:
-        with open(data.file_score, "wb") as fileScore:
+        with open(file_score, "wb") as fileScore:
             dataToSave = pickle.Pickler(fileScore)
             dataToSave.dump(dictScore)
-        quit_script.tryagain()
+        tryagain()
     except SystemExit:
         print('See you next time')
         playTheHangman = False
